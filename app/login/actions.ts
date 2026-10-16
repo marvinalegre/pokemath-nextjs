@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import { users } from "@/lib/mongodb"
 import { signupSchema } from "@/lib/validations/signup"
 import { verifyPassword } from "@/lib/password"
+import { createSession } from "@/lib/session"
 
 export type LoginState = {
   message?: string
@@ -43,6 +44,8 @@ export async function login(
       message: "Incorrect username or password",
     }
   }
+
+  await createSession(user._id)
 
   redirect("/")
 }
