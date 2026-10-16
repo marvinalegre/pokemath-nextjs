@@ -39,7 +39,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   }, [state])
 
   return (
-    <Card {...props}>
+    <Card className="bg-zinc-100" {...props}>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
       </CardHeader>
@@ -80,6 +80,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   !usernameEdited && !!state.fieldErrors.username?.length
                 }
                 aria-describedby="username-error"
+                className="border-2 bg-white"
               />
               {!usernameEdited && state.fieldErrors?.username && (
                 <FieldError id="username-error">
@@ -103,6 +104,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   !passwordEdited && !!state.fieldErrors.password?.length
                 }
                 aria-describedby="password-error"
+                className="border-2 bg-white"
               />
               {!passwordEdited && state.fieldErrors?.password && (
                 <FieldError id="password-error">
@@ -115,6 +117,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   id="show-password"
                   checked={showPassword}
                   onCheckedChange={setShowPassword}
+                  className="border-2 bg-white"
                 />
                 <Label htmlFor="show-password">Show password</Label>
               </div>

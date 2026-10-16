@@ -31,7 +31,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   }, [state])
 
   return (
-    <Card {...props}>
+    <Card className="bg-zinc-100" {...props}>
       <CardHeader>
         <CardTitle>Log in</CardTitle>
       </CardHeader>
@@ -56,6 +56,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
                   setUsername(e.target.value)
                   setUsernameEdited(true)
                 }}
+                className="border-2 bg-white"
               />
             </Field>
             <Field>
@@ -70,6 +71,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
                   setPassword(e.target.value)
                   setPasswordEdited(true)
                 }}
+                className="border-2 bg-white"
               />
 
               <div className="flex items-center gap-2">
@@ -77,6 +79,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
                   id="show-password"
                   checked={showPassword}
                   onCheckedChange={setShowPassword}
+                  className="border-2 bg-white"
                 />
                 <Label htmlFor="show-password">Show password</Label>
               </div>
