@@ -1,7 +1,9 @@
-// app/signup/actions.ts
 "use server"
 
 import { redirect } from "next/navigation"
+import { z } from "zod"
+
+import { signupSchema } from "@/lib/validations/signup"
 
 export type SignupState = {
   formErrors: string[]
@@ -12,19 +14,15 @@ export type SignupState = {
 }
 
 export async function signup(
-  prevState: SignupState,
+  _prevState: SignupState,
   formData: FormData
 ): Promise<SignupState> {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-  await sleep(2000)
-
   const username = formData.get("username")
   const password = formData.get("password")
+  const result = signupSchema.safeParse({ username, password })
 
-  return {
-    fieldErrors: { username: ["testing", "asdf"], password: ["testing"] },
-    formErrors: [],
-    message: "hello world",
+  if (!result.success) {
+    return z.flattenError(result.error)
   }
 
   redirect("/login")

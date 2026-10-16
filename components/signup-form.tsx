@@ -68,6 +68,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FieldLabel htmlFor="username">Username</FieldLabel>
               <Input
                 id="username"
+                name="username"
                 type="text"
                 value={username}
                 disabled={pending}
@@ -90,6 +91,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <Input
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 disabled={pending}
