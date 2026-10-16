@@ -1,13 +1,17 @@
-import { MongoClient } from "mongodb"
+import { MongoClient, Collection } from "mongodb"
 
-const client = new MongoClient("mongodb://127.0.0.1:27017/pokemath")
+import type { User } from "@/types/user"
 
-const clientPromise = client.connect()
+const globalForMongo = globalThis as unknown as {
+  mongoClient?: Promise<MongoClient>
+}
 
-export const dbPromise = clientPromise.then(async (client) => {
-  const db = client.db("pokemath")
+const clientPromise =
+  globalForMongo.mongoClient ??
+  (globalForMongo.mongoClient = new MongoClient(
+    "mongodb://127.0.0.1:27017/pokemath"
+  ).connect())
 
-  await db.collection("users").createIndex({ username: 1 }, { unique: true })
+const db = (await clientPromise).db("pokemath")
 
-  return db
-})
+export const users: Collection<User> = db.collection<User>("users")
