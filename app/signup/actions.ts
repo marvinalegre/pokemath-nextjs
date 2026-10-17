@@ -6,6 +6,7 @@ import { z } from "zod"
 import { signupSchema } from "@/lib/validations/signup"
 import { users } from "@/lib/mongodb"
 import { hashPassword } from "@/lib/password"
+import { reservedUsernames } from "@/lib/reservedUsernames"
 
 export type SignupState = {
   formErrors: string[]
@@ -37,7 +38,10 @@ export async function signup(
 
   const normalizedUsername = rawUsername.trim().toLowerCase()
   const user = await users.findOne({ username: normalizedUsername })
-  if (!fieldErrors.username && user) {
+  if (
+    !fieldErrors.username &&
+    (user || reservedUsernames.includes(normalizedUsername))
+  ) {
     fieldErrors.username = ["Username is not available"]
   }
 
