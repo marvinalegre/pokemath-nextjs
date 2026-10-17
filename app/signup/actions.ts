@@ -6,7 +6,7 @@ import { z } from "zod"
 import { signupSchema } from "@/lib/validations/signup"
 import { users } from "@/lib/mongodb"
 import { hashPassword } from "@/lib/password"
-import { reservedUsernames } from "@/lib/reservedUsernames"
+import { reservedUsernames } from "@/lib/reserved-usernames"
 
 export type SignupState = {
   formErrors: string[]
