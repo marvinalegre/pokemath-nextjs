@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react"
 import { LoaderCircle } from "lucide-react"
 
-import { signup } from "@/app/signup/actions"
+import { signup, type SignupState } from "@/app/(auth)/signup/actions"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,8 +17,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-
-import type { SignupState } from "@/app/signup/actions"
 
 const initialState: SignupState = {
   formErrors: [],

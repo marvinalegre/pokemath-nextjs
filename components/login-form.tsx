@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react"
 import { LoaderCircle } from "lucide-react"
 
-import { login } from "@/app/login/actions"
+import { login } from "@/app/(auth)/login/actions"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
