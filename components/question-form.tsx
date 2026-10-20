@@ -40,10 +40,15 @@ export function QuestionForm() {
               onChange={(e) => {
                 setAnswer(e.target.value)
               }}
-              className="border-2 bg-white"
+              className="h-auto border-2 bg-white text-xl md:h-auto md:text-xl"
             />
           </Field>
-          <Button type="submit" disabled={pending} aria-busy={pending}>
+          <Button
+            type="submit"
+            disabled={pending}
+            aria-busy={pending}
+            className="h-auto py-1 text-xl md:h-auto md:py-1 md:text-xl"
+          >
             {pending && <LoaderCircle className="size-4 animate-spin" />}
             Submit
           </Button>
