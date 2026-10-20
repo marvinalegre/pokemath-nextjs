@@ -193,6 +193,9 @@ importers:
       lucide-react:
         specifier: ^1.56.0
         version: 1.56.0(@types/react@19.3.0)(react@19.3.0)
+      mathforge:
+        specifier: file:../../projects/mathforge
+        version: file:../../projects/mathforge
       mongodb:
         specifier: ^7.7.0
         version: 7.7.0(socks@2.8.10)
@@ -2388,6 +2391,9 @@ packages:
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
+
+  mathforge@file:../../projects/mathforge:
+    resolution: {directory: ../../projects/mathforge, type: directory}
 
   media-typer@1.1.1:
     resolution: {integrity: sha512-yz3xRaG20c6/BOzvYoDaGtPmGscs7YivItZEEqe6GbwNfHuxu9YNmvnEkMzKldAGY4/80pRcQRZSEnhquk9XuQ==}
@@ -5529,6 +5535,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.6.0
 
   math-intrinsics@1.1.0: {}
+
+  mathforge@file:../../projects/mathforge: {}
 
   media-typer@1.1.1: {}
 

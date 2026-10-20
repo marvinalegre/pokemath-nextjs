@@ -1,7 +1,7 @@
 import { BlockMath } from "react-katex"
 import "katex/dist/katex.min.css"
 
-type Operator = "+" | "-" | "*" | "/"
+export type Operator = "+" | "-" | "*" | "/"
 
 interface Operation {
   symbol: string
