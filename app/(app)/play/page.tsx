@@ -1,11 +1,8 @@
-import { forge } from "mathforge"
-
-import { randomId } from "@/lib/supported-problems"
 import { Question } from "@/components/question"
 import { userActiveQuestions } from "@/lib/mongodb"
 import { getCurrentUser } from "@/lib/session"
-
 import { QuestionForm } from "@/components/question-form"
+import { replaceActiveQuestion } from "@/lib/question"
 
 export default async function Page() {
   const user = (await getCurrentUser())!
@@ -25,24 +22,14 @@ export default async function Page() {
     )
   }
 
-  const randomQuestionId = randomId()
-  const question = forge(randomQuestionId)
-
-  await userActiveQuestions.replaceOne(
-    { userId: user._id },
-    {
-      userId: user._id,
-      createdAt: new Date(),
-      problemId: randomQuestionId,
-      data: question.data,
-      answer: question.answer,
-    },
-    { upsert: true }
-  )
+  const newActiveQuestion = await replaceActiveQuestion(user._id)
 
   return (
     <>
-      <Question problemId={randomQuestionId} data={question.data} />
+      <Question
+        problemId={newActiveQuestion.id}
+        data={newActiveQuestion.data}
+      />
     </>
   )
 }
