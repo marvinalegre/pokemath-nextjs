@@ -2,6 +2,7 @@ import "server-only"
 import { cookies } from "next/headers"
 import { randomBytes } from "node:crypto"
 import { ObjectId } from "mongodb"
+import { cache } from "react"
 
 import { sessions, users } from "@/lib/mongodb"
 
@@ -26,7 +27,7 @@ export async function createSession(userId: ObjectId) {
   })
 }
 
-export async function getCurrentUser() {
+export const getCurrentUser = cache(async () => {
   const sessionId = (await cookies()).get("session")?.value
 
   if (!sessionId) return null
@@ -39,7 +40,7 @@ export async function getCurrentUser() {
   if (!session) return null
 
   return users.findOne({ _id: session.userId })
-}
+})
 
 export async function deleteSession() {
   const cookieStore = await cookies()

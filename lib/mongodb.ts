@@ -2,6 +2,7 @@ import { MongoClient, Collection } from "mongodb"
 
 import type { User } from "@/types/user"
 import type { Session } from "@/types/session"
+import { UserActiveQuestion } from "@/types/active-question"
 
 const globalForMongo = globalThis as unknown as {
   mongoClient?: Promise<MongoClient>
@@ -17,5 +18,7 @@ const db = (await clientPromise).db("pokemath")
 
 export const users: Collection<User> = db.collection<User>("users")
 export const sessions: Collection<Session> = db.collection<Session>("sessions")
+export const userActiveQuestions: Collection<UserActiveQuestion> =
+  db.collection<UserActiveQuestion>("userActiveQuestion")
 
 await sessions.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 })
