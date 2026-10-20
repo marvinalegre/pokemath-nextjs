@@ -57,6 +57,7 @@ export async function signup(
     await users.insertOne({
       username: normalizedUsername,
       passwordHash: passwordHash,
+      rating: 700,
       createdAt: new Date(),
     })
   } catch (e) {
