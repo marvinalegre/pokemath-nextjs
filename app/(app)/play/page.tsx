@@ -5,6 +5,8 @@ import { Question } from "@/components/question"
 import { userActiveQuestions } from "@/lib/mongodb"
 import { getCurrentUser } from "@/lib/session"
 
+import { QuestionForm } from "@/components/question-form"
+
 export default async function Page() {
   const user = (await getCurrentUser())!
   const userActiveQuestion = await userActiveQuestions.findOne({
@@ -13,10 +15,13 @@ export default async function Page() {
 
   if (userActiveQuestion) {
     return (
-      <Question
-        problemId={userActiveQuestion.problemId}
-        data={userActiveQuestion.data}
-      />
+      <>
+        <Question
+          problemId={userActiveQuestion.problemId}
+          data={userActiveQuestion.data}
+        />
+        <QuestionForm />
+      </>
     )
   }
 
@@ -35,5 +40,9 @@ export default async function Page() {
     { upsert: true }
   )
 
-  return <Question problemId={randomQuestionId} data={question.data} />
+  return (
+    <>
+      <Question problemId={randomQuestionId} data={question.data} />
+    </>
+  )
 }
