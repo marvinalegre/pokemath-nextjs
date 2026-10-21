@@ -24,6 +24,7 @@ export function QuestionForm() {
     if (state.message === "correct") {
       setIsDialogOpen(true)
     }
+    setAnswer("")
   }, [state])
 
   return (
