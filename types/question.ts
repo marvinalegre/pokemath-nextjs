@@ -18,4 +18,5 @@ export type UserActiveQuestion = {
 export interface Question {
   _id: string
   rating: number
+  gradeLevel: number
 }
