@@ -3,6 +3,7 @@ import { MongoClient, Collection } from "mongodb"
 import type { User } from "@/types/user"
 import type { Session } from "@/types/session"
 import { UserActiveQuestion, Question } from "@/types/question"
+import { PokemonWithTier } from "@/types/pokemon"
 
 const globalForMongo = globalThis as unknown as {
   mongoClient?: Promise<MongoClient>
@@ -22,5 +23,7 @@ export const userActiveQuestions: Collection<UserActiveQuestion> =
   db.collection<UserActiveQuestion>("userActiveQuestion")
 export const questions: Collection<Question> =
   db.collection<Question>("questions")
+export const pokemons: Collection<PokemonWithTier> =
+  db.collection<PokemonWithTier>("pokemons")
 
 await sessions.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 })

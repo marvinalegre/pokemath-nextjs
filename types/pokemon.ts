@@ -3,7 +3,7 @@ export interface Pokemon {
 }
 
 export interface PokemonWithTier {
-  id: number
+  _id: number
   name: string
   tier: number
 }
