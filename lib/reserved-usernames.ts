@@ -4,6 +4,8 @@ export const reservedUsernames = [
   "player",
   "players",
   "practice",
+  "sprites",
+  "sugimori",
   "quiz",
 
   "_appspecific",
@@ -600,4 +602,4 @@ export const reservedUsernames = [
 
   "z",
   "zsh",
-];
+]
