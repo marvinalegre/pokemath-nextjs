@@ -26,6 +26,7 @@ export function QuestionForm() {
   })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [answer, setAnswer] = useState("")
+  const [isLocked, setIsLocked] = useState(false)
   const [caughtPokemon, setCaughtPokemon] = useState<CaughtPokemon | null>(null)
 
   useEffect(() => {
@@ -43,6 +44,15 @@ export function QuestionForm() {
       }
     }
     setAnswer("")
+  }, [state])
+
+  useEffect(() => {
+    if (state.status !== "success" || state.message !== "wrong") return
+
+    setIsLocked(true)
+    const timer = setTimeout(() => setIsLocked(false), 10_000)
+
+    return () => clearTimeout(timer)
   }, [state])
 
   return (
@@ -64,7 +74,7 @@ export function QuestionForm() {
           </Field>
           <Button
             type="submit"
-            disabled={pending}
+            disabled={pending || isLocked}
             aria-busy={pending}
             className="h-auto py-1 text-xl md:h-auto md:py-1 md:text-xl"
           >
