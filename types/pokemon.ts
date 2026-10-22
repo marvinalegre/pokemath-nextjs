@@ -7,3 +7,9 @@ export interface PokemonWithTier {
   name: string
   tier: number
 }
+
+export type CaughtPokemon = {
+  id: string
+  catchId: string
+  name: string
+}

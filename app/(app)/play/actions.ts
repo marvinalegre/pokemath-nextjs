@@ -8,10 +8,13 @@ import { newRating } from "@/lib/rating"
 import { pokemons, users, questions, userPokemons } from "@/lib/mongodb"
 import { rollTier } from "@/lib/catch"
 import { supportedPokemons } from "@/lib/supported-pokemons"
+import type { CaughtPokemon } from "@/types/pokemon"
+import { ObjectId } from "mongodb"
 
 export type CheckAnswerState =
   | { status: "idle" }
-  | { status: "success"; message: string }
+  | { status: "correct"; caught: CaughtPokemon | null }
+  | { status: "wrong" }
   | { status: "error"; message: string }
 
 export async function checkAnswer(
@@ -58,12 +61,12 @@ export async function checkAnswer(
       { $set: { rating: newRating(question.rating, 1, user.rating) } }
     )
 
-    return { status: "success", message: "wrong" }
+    return { status: "wrong" }
   }
 
   const tier = rollTier(question.gradeLevel)
   if (tier === 0) {
-    return { status: "success", message: "got away" }
+    return { status: "correct", caught: null }
   }
 
   let caught
@@ -73,11 +76,25 @@ export async function checkAnswer(
       .toArray()
   } while (!supportedPokemons.includes(caught._id))
 
-  await userPokemons.insertOne({
+  const result = await userPokemons.insertOne({
     ownderId: user._id,
     pokemonId: caught._id,
     caughtBy: user._id,
     caughtAt: new Date(),
   })
-  return { status: "success", message: `${caught._id} ${caught.name}` }
+
+  return {
+    status: "correct",
+    caught: {
+      id: String(caught._id),
+      catchId: result.insertedId.toString(),
+      name: caught.name,
+    },
+  }
+}
+
+export async function releaseCatch(id: string) {
+  // TODO: check authorization
+
+  await userPokemons.deleteOne({ _id: new ObjectId(id) })
 }

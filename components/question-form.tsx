@@ -1,11 +1,11 @@
 "use client"
 
 import { LoaderCircle } from "lucide-react"
-import { checkAnswer } from "@/app/(app)/play/actions"
+import { checkAnswer, releaseCatch } from "@/app/(app)/play/actions"
 import { Button } from "@/components/ui/button"
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useActionState, useState, useEffect } from "react"
+import { useTransition, useActionState, useState, useEffect } from "react"
 import {
   Dialog,
   DialogContent,
@@ -14,46 +14,48 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-
-type CaughtPokemon = {
-  id: string
-  name: string
-}
+import type { CaughtPokemon } from "@/types/pokemon"
 
 export function QuestionForm() {
   const [state, formAction, pending] = useActionState(checkAnswer, {
     status: "idle",
   })
+  const [isPending, startTransition] = useTransition()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [answer, setAnswer] = useState("")
   const [isLocked, setIsLocked] = useState(false)
   const [caughtPokemon, setCaughtPokemon] = useState<CaughtPokemon | null>(null)
 
   useEffect(() => {
-    if (state.status === "success") {
+    if (state.status === "correct" || state.status === "wrong") {
       setIsDialogOpen(true)
 
-      if (state.message !== "got away" && state.message !== "wrong") {
-        const [id, name] = state.message.split(" ")
-        setCaughtPokemon({
-          id,
-          name,
-        })
-      } else {
-        setCaughtPokemon(null)
+      if (state.status === "correct") {
+        setCaughtPokemon(state.caught)
       }
     }
+
     setAnswer("")
+
+    // TODO: add error handling
   }, [state])
 
   useEffect(() => {
-    if (state.status !== "success" || state.message !== "wrong") return
+    if (state.status !== "wrong") return
 
     setIsLocked(true)
     const timer = setTimeout(() => setIsLocked(false), 10_000)
 
     return () => clearTimeout(timer)
   }, [state])
+
+  function handleRelease() {
+    startTransition(async () => {
+      if (caughtPokemon) await releaseCatch(caughtPokemon.catchId)
+      setCaughtPokemon(null)
+      setIsDialogOpen(false)
+    })
+  }
 
   return (
     <>
@@ -64,6 +66,7 @@ export function QuestionForm() {
               id="answer"
               name="answer"
               type="text"
+              autoComplete="off"
               value={answer}
               disabled={pending}
               onChange={(e) => {
@@ -88,18 +91,16 @@ export function QuestionForm() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {state.status === "success" && state.message === "wrong"
-                ? "Wrong."
-                : "Correct!"}
+              {state.status === "wrong" ? "Wrong." : "Correct!"}
             </DialogTitle>
-            {state.status === "success" && state.message !== "wrong" && (
+            {state.status !== "wrong" && (
               <DialogDescription>
                 {caughtPokemon
                   ? "Nice work. You caught a new Pokémon!"
                   : "Aw! The Pokémon got away."}
               </DialogDescription>
             )}
-            {state.status === "success" && state.message === "wrong" && (
+            {state.status === "wrong" && (
               <DialogDescription>Try again 10 seconds.</DialogDescription>
             )}
           </DialogHeader>
@@ -120,9 +121,24 @@ export function QuestionForm() {
             </div>
           )}
 
-          <DialogFooter>
-            <Button onClick={() => setIsDialogOpen(false)}>Continue</Button>
-          </DialogFooter>
+          {state.status === "wrong" ||
+          (state.status === "correct" && state.caught == null) ? (
+            <DialogFooter>
+              <Button onClick={() => setIsDialogOpen(false)}>Continue</Button>
+            </DialogFooter>
+          ) : (
+            <DialogFooter>
+              <Button onClick={() => setIsDialogOpen(false)}>Keep</Button>
+              <Button
+                variant="outline"
+                aria-busy={isPending}
+                onClick={() => handleRelease()}
+              >
+                {isPending && <LoaderCircle className="size-4 animate-spin" />}
+                Release
+              </Button>
+            </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
     </>
