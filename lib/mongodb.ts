@@ -1,6 +1,6 @@
 import { MongoClient, Collection } from "mongodb"
 
-import type { User } from "@/types/user"
+import type { User, UserPokemon } from "@/types/user"
 import type { Session } from "@/types/session"
 import { UserActiveQuestion, Question } from "@/types/question"
 import { PokemonWithTier } from "@/types/pokemon"
@@ -25,5 +25,7 @@ export const questions: Collection<Question> =
   db.collection<Question>("questions")
 export const pokemons: Collection<PokemonWithTier> =
   db.collection<PokemonWithTier>("pokemons")
+export const userPokemons: Collection<UserPokemon> =
+  db.collection<UserPokemon>("userPokemons")
 
 await sessions.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 })

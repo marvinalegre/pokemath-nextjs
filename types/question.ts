@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb"
 import type { ProblemMap } from "mathforge"
 import type { SupportedId } from "@/lib/supported-problems"
+import { Grade } from "@/lib/catch"
 
 type ActiveQuestion = {
   [K in SupportedId]: {
@@ -18,5 +19,5 @@ export type UserActiveQuestion = {
 export interface Question {
   _id: string
   rating: number
-  gradeLevel: number
+  gradeLevel: Grade
 }

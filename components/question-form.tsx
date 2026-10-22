@@ -15,14 +15,32 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 
+type CaughtPokemon = {
+  id: string
+  name: string
+}
+
 export function QuestionForm() {
-  const [state, formAction, pending] = useActionState(checkAnswer, {})
+  const [state, formAction, pending] = useActionState(checkAnswer, {
+    status: "idle",
+  })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [answer, setAnswer] = useState("")
+  const [caughtPokemon, setCaughtPokemon] = useState<CaughtPokemon | null>(null)
 
   useEffect(() => {
-    if (state.message === "correct") {
+    if (state.status === "success") {
       setIsDialogOpen(true)
+
+      if (state.message !== "got away" && state.message !== "wrong") {
+        const [id, name] = state.message.split(" ")
+        setCaughtPokemon({
+          id,
+          name,
+        })
+      } else {
+        setCaughtPokemon(null)
+      }
     }
     setAnswer("")
   }, [state])
@@ -59,11 +77,39 @@ export function QuestionForm() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Correct!</DialogTitle>
-            <DialogDescription>
-              Nice work. Here's your next question.
-            </DialogDescription>
+            <DialogTitle>
+              {state.status === "success" && state.message === "wrong"
+                ? "Wrong."
+                : "Correct!"}
+            </DialogTitle>
+            {state.status === "success" && state.message !== "wrong" && (
+              <DialogDescription>
+                {caughtPokemon
+                  ? "Nice work. You caught a new Pokémon!"
+                  : "Aw! The Pokémon got away."}
+              </DialogDescription>
+            )}
+            {state.status === "success" && state.message === "wrong" && (
+              <DialogDescription>Try again 10 seconds.</DialogDescription>
+            )}
           </DialogHeader>
+
+          {caughtPokemon && (
+            <div className="flex flex-col items-center gap-2 py-4">
+              <img
+                src={
+                  caughtPokemon
+                    ? `/sprites/${caughtPokemon.id.padStart(4, "0")}.avif`
+                    : undefined
+                }
+                alt={caughtPokemon?.name}
+                width={200}
+                height={200}
+              />
+              <p className="font-semibold capitalize">{caughtPokemon?.name}</p>
+            </div>
+          )}
+
           <DialogFooter>
             <Button onClick={() => setIsDialogOpen(false)}>Continue</Button>
           </DialogFooter>
