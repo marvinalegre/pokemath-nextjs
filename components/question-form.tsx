@@ -128,7 +128,14 @@ export function QuestionForm() {
             </DialogFooter>
           ) : (
             <DialogFooter>
-              <Button onClick={() => setIsDialogOpen(false)}>Keep</Button>
+              <Button
+                onClick={() => {
+                  setCaughtPokemon(null)
+                  setIsDialogOpen(false)
+                }}
+              >
+                Keep
+              </Button>
               <Button
                 variant="outline"
                 aria-busy={isPending}
